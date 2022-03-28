@@ -65,15 +65,18 @@ div.query-parameters {
   align-items: center;
   margin-bottom: 1em;
 }
-div.query-parameters input[type="text"] {
+div.query-parameters input[type="text"],
+div.query-parameters input[type="number"] {
   border: 1px solid #666;
   padding: 0.5em;
 }
 div.query-parameters label {
   text-align: right;
-  font-weight: bold;
   display: inline-block;
   padding-right: 2em;
+}
+div.query-parameters > label {
+  font-weight: bold;
 }
 .completed-count-total-count {
   width: 60%;
