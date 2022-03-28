@@ -160,8 +160,8 @@ class Parameter:
         without_params = cls.extract_re.sub("", sql)
         without_double_percents = without_params.replace("%%", "")
         if "%" in without_double_percents:
-            raise ValueError(r"Found a single % character")
-                
+            raise ValueError(r"Invalid query: contains single '%' character. Try escaping '%' as double '%%'.")
+
         # Read values form sources
         for param in target:
             for source in value_sources:

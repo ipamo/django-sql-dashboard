@@ -195,12 +195,7 @@ def _dashboard_index(
             PARAMETER_CLASS.extract(sql, value_sources=[request.POST, request.GET], target=parameters)
             sql_query_parameter_errors.append(False)
         except ValueError as e:
-            if "%" in sql:
-                sql_query_parameter_errors.append(
-                    r"Invalid query - try escaping single '%' as double '%%'"
-                )
-            else:
-                sql_query_parameter_errors.append(str(e))
+            sql_query_parameter_errors.append(str(e))
     parameter_values = {
         parameter.name: parameter.value
         for parameter in parameters
