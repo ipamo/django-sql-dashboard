@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+import re
 
 import bleach
 import markdown
@@ -80,15 +81,21 @@ def sql_dashboard_tsv(result):
     return writer.getvalue().strip()
 
 
+_link_re = re.compile(r"^<a href=\"(?:http\://|https\://|/)[^<>\"]+\">([^<>]*)</a>$")
+
 @register.filter
 def format_cell(value):
-    if isinstance(value, str) and value and value[0] in ("{", "["):
-        try:
-            return mark_safe(
-                '<pre class="json">{}</pre>'.format(
-                    escape(json.dumps(json.loads(value), indent=2))
+    if isinstance(value, str) and value:
+        if (value[0] == '{' and value[-1] == '}') or (value[0] == '[' and value[-1] == ']'):
+            try:
+                return mark_safe(
+                    '<pre class="json">{}</pre>'.format(
+                        escape(json.dumps(json.loads(value), indent=2))
+                    )
                 )
-            )
-        except json.JSONDecodeError:
-            pass
+            except json.JSONDecodeError:
+                pass
+        elif _link_re.match(value):
+            # Accept simple links
+            return mark_safe(value)
     return mark_safe(urlize(value, nofollow=True, autoescape=True))
